@@ -1,0 +1,3 @@
+cp -ai /Users/dalvikus/Library/Developer/Xcode/DerivedData/util-fqoppkdvbvtldigkukjkkwjrljge/Build/Products/Debug-iphoneos/libutil.a libutil-iphoneos.a
+cp -ai /Users/dalvikus/Library/Developer/Xcode/DerivedData/util-fqoppkdvbvtldigkukjkkwjrljge/Build/Products/Debug-iphonesimulator/libutil.a libutil-iphonesimulator.a
+lipo -create libutil-iphoneos.a libutil-iphonesimulator.a -output libutil.a
