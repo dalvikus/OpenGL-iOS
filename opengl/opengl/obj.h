@@ -1,8 +1,18 @@
 #ifndef _OBJ
 #define _OBJ
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+#include <math.h>   // NAM, INFINITY
 void parseObj(const char* objPathname);
 int readToken(FILE* fp, char** tokenPtr);
 float parseFloat(char* s);
+#ifndef BOOL
+#define BOOL int
+#define true 1
+#define false 0
+#endif
 BOOL parseIndices(char* s, unsigned ia[]);
 #define CONTAINER_CAPACITY    10000
 typedef struct {

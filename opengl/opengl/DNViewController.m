@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 DN2Soft. All rights reserved.
 //
 
+#include "obj.h"
 #import "DNViewController.h"
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -246,6 +247,10 @@ GLfloat gCubeVertexData[216] =
     // Create shader program.
     _program = glCreateProgram();
     
+    NSString *objPathname = [[NSBundle mainBundle] pathForResource:@"Chips3" ofType:@"obj"];
+    NSLog(@"%@", objPathname);
+    parseObj([objPathname UTF8String]);
+
     // Create and compile vertex shader.
     vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
     if (![self compileShader:&vertShader type:GL_VERTEX_SHADER file:vertShaderPathname]) {

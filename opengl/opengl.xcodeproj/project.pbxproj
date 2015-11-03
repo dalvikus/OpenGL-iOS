@@ -26,6 +26,8 @@
 		A48D79011BE74C1C00317D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A48D78D81BE74C1C00317D8B /* UIKit.framework */; };
 		A48D79091BE74C1C00317D8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A48D79071BE74C1C00317D8B /* InfoPlist.strings */; };
 		A48D790B1BE74C1C00317D8B /* openglTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A48D790A1BE74C1C00317D8B /* openglTests.m */; };
+		A48D79351BE74DB400317D8B /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A48D79341BE74DB400317D8B /* Chips3.obj */; };
+		A48D793C1BE89B2300317D8B /* obj.c in Sources */ = {isa = PBXBuildFile; fileRef = A48D793B1BE89B2300317D8B /* obj.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,9 @@
 		A48D79061BE74C1C00317D8B /* openglTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "openglTests-Info.plist"; sourceTree = "<group>"; };
 		A48D79081BE74C1C00317D8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A48D790A1BE74C1C00317D8B /* openglTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = openglTests.m; sourceTree = "<group>"; };
+		A48D79341BE74DB400317D8B /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../../Chips3.obj; sourceTree = "<group>"; };
+		A48D79381BE750E100317D8B /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj.h; sourceTree = "<group>"; };
+		A48D793B1BE89B2300317D8B /* obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = obj.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +131,9 @@
 		A48D78DE1BE74C1C00317D8B /* opengl */ = {
 			isa = PBXGroup;
 			children = (
+				A48D793B1BE89B2300317D8B /* obj.c */,
+				A48D79381BE750E100317D8B /* obj.h */,
+				A48D79341BE74DB400317D8B /* Chips3.obj */,
 				A48D78E71BE74C1C00317D8B /* DNAppDelegate.h */,
 				A48D78E81BE74C1C00317D8B /* DNAppDelegate.m */,
 				A48D78EA1BE74C1C00317D8B /* Main_iPhone.storyboard */,
@@ -249,6 +257,7 @@
 				A48D78F11BE74C1C00317D8B /* Shader.fsh in Resources */,
 				A48D78EF1BE74C1C00317D8B /* Main_iPad.storyboard in Resources */,
 				A48D78EC1BE74C1C00317D8B /* Main_iPhone.storyboard in Resources */,
+				A48D79351BE74DB400317D8B /* Chips3.obj in Resources */,
 				A48D78F81BE74C1C00317D8B /* Images.xcassets in Resources */,
 				A48D78E31BE74C1C00317D8B /* InfoPlist.strings in Resources */,
 				A48D78F31BE74C1C00317D8B /* Shader.vsh in Resources */,
@@ -271,6 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A48D78E91BE74C1C00317D8B /* DNAppDelegate.m in Sources */,
+				A48D793C1BE89B2300317D8B /* obj.c in Sources */,
 				A48D78F61BE74C1C00317D8B /* DNViewController.m in Sources */,
 				A48D78E51BE74C1C00317D8B /* main.m in Sources */,
 			);
@@ -410,6 +420,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "opengl/opengl-Prefix.pch";
 				INFOPLIST_FILE = "opengl/opengl-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/dalvikus/work/OpenGL/iOS,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -423,6 +437,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "opengl/opengl-Prefix.pch";
 				INFOPLIST_FILE = "opengl/opengl-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/dalvikus/work/OpenGL/iOS,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
