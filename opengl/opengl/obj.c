@@ -82,6 +82,14 @@ void free_container(container* c_ptr)
         free(c_ptr->data_ptr);
     init_container(c_ptr);
 }
+void make_container_compact(container* c_ptr, size_t data_size)
+{
+    if (!c_ptr)
+        return;
+    void* q = realloc(c_ptr->data_ptr, data_size * c_ptr->next_data_index);
+    assert(q);
+    c_ptr->data_ptr = q;
+}
 BOOL add_data_to_container(container* container_ptr, void* data_ptr, size_t data_size)
 {
     const char NAME[] = "add_data_to_container";
@@ -106,23 +114,12 @@ BOOL add_data_to_container(container* container_ptr, void* data_ptr, size_t data
     ++container_ptr->next_data_index;
     return true;
 }
-void print_container_float3(container c)
-{
-    for (int i = 0; i < c.next_data_index; ++i) {
-        float3* float3_ptr = (float3*) c.data_ptr + i;
-        printf("(%f %f %f)\n", float3_ptr->x, float3_ptr->y, float3_ptr->z);
-    }
-}
-void print_container_int3(container c)
-{
-    for (int i = 0; i < c.next_data_index; ++i) {
-        int3* int3_ptr = (int3*) c.data_ptr + i;
-        printf("(%d %d %d)\n", int3_ptr->i, int3_ptr->j, int3_ptr->k);
-    }
-}
 
-void parseObj(const char* objPathname)
+void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
 {
+    if (!obj_opengl_ptr)
+        return;
+    container* gc_ptr = &obj_opengl_ptr->gc; init_container(gc_ptr);
     container vc; init_container(&vc);
     container vtc; init_container(&vtc);
     container vnc; init_container(&vnc);
@@ -138,6 +135,10 @@ void parseObj(const char* objPathname)
 
     int k = 0;
     char* token = NULL;
+    char* group_name_ptr = NULL;
+    BOOL all_indices_same = true;   // all indices like "l/m/n" are the same if they are positive
+    BOOL all_has_texture = true;
+    BOOL all_has_normal = true;
     while (1) {
         if (token == NULL)
             k = readToken(fp, &token);
@@ -147,7 +148,17 @@ void parseObj(const char* objPathname)
             if (c == 'g') {
                 k = readToken(fp, &token);
                 assert(k > 0);
-                printf("g %s\n", token);
+                if (group_name_ptr) {
+                    group g;
+                    g.name_ptr = group_name_ptr;
+                    g.nf = ivc.next_data_index;
+                    add_data_to_container(gc_ptr, &g, sizeof(group));
+                    group_name_ptr = NULL;
+                }
+                size_t token_len = strlen(token);
+                group_name_ptr = (char*) malloc(token_len + 1); // 1 for '\0'
+                assert(group_name_ptr);
+                strncpy(group_name_ptr, token, token_len + 1);  // including '\0'
 //              printf("g: |%s|\n", token);
                 token = NULL;
                 continue;
@@ -170,8 +181,8 @@ void parseObj(const char* objPathname)
 //printf("vz: %f\n", vz);
 ////printf("\n");
 
-                    float3 v = {vx, vy, vz};
-                    add_data_to_container(&vc, &v, sizeof(float3));
+                    float P[3] = {vx, vy, vz};
+                    add_data_to_container(&vc, P, sizeof(float[3]));
 
                     token = NULL;
                 } else if (c2 == 't') { // "vt"
@@ -188,8 +199,8 @@ void parseObj(const char* objPathname)
 //printf("vtv: %f\n", vtv);
 ////printf("\n");
 
-                    float2 uv = {vtu, vtv};
-                    add_data_to_container(&vtc, &uv, sizeof(float2));
+                    float uv[2] = {vtu, vtv};
+                    add_data_to_container(&vtc, uv, sizeof(float[2]));
 
                     token = NULL;
                 } else if (c2 == 'n') { // "vn"
@@ -210,8 +221,8 @@ void parseObj(const char* objPathname)
 //printf("vnz: %f\n", vnz);
 ////printf("\n");
 
-                    float3 n = {vnx, vny, vnz};
-                    add_data_to_container(&vnc, &n, sizeof(float3));
+                    float N[3] = {vnx, vny, vnz};
+                    add_data_to_container(&vnc, N, sizeof(float[3]));
 
                     token = NULL;
                 } else {
@@ -223,25 +234,49 @@ void parseObj(const char* objPathname)
                 k = readToken(fp, &token); assert(k > 0);
                 unsigned ia1[3];
                 b = parseIndices(token, ia1); assert(b);
+                if (ia1[1] == 0)
+                    all_has_texture = false;
+                else if (ia1[1] != ia1[0])
+                    all_indices_same = false;
+                if (ia1[2] == 0)
+                    all_has_normal = false;
+                else if (ia1[2] != ia1[0])
+                    all_indices_same = false;
 ////printf(" %s", token);
 //printf("f1: %s\n", token);
                 k = readToken(fp, &token); assert(k > 0);
                 unsigned ia2[3];
                 b = parseIndices(token, ia2); assert(b);
+                if (ia2[1] == 0)
+                    all_has_texture = false;
+                else if (ia2[1] != ia2[0])
+                    all_indices_same = false;
+                if (ia2[2] == 0)
+                    all_has_normal = false;
+                else if (ia2[2] != ia2[0])
+                    all_indices_same = false;
 ////printf(" %s", token);
 //printf("f2: %s\n", token);
                 k = readToken(fp, &token); assert(k > 0);
                 unsigned ia3[3];
                 b = parseIndices(token, ia3); assert(b);
+                if (ia3[1] == 0)
+                    all_has_texture = false;
+                else if (ia3[1] != ia3[0])
+                    all_indices_same = false;
+                if (ia3[2] == 0)
+                    all_has_normal = false;
+                else if (ia3[2] != ia3[0])
+                    all_indices_same = false;
 ////printf(" %s", token);
 //printf("f3: %s\n", token);
 
-                int3 i3v = {ia1[0], ia2[0], ia3[0]};
-                add_data_to_container(&ivc, &i3v, sizeof(int3));
-                int3 i3vt = {ia1[1], ia2[1], ia3[1]};
-                add_data_to_container(&ivtc, &i3vt, sizeof(int3));
-                int3 i3vn = {ia1[2], ia2[2], ia3[2]};
-                add_data_to_container(&ivnc, &i3vn, sizeof(int3));
+                int i3v[3] = {ia1[0] - 1, ia2[0] - 1, ia3[0] - 1};
+                add_data_to_container(&ivc, i3v, sizeof(int[3]));
+                int i3vt[3] = {ia1[1], ia2[1], ia3[1]};
+                add_data_to_container(&ivtc, i3vt, sizeof(int[3]));
+                int i3vn[3] = {ia1[2], ia2[2], ia3[2]};
+                add_data_to_container(&ivnc, i3vn, sizeof(int[3]));
 
                 k = readToken(fp, &token);
                 if (k == 0) {
@@ -274,111 +309,236 @@ void parseObj(const char* objPathname)
             perror("ferror");
         }
     }
+    group g;
+    g.name_ptr = group_name_ptr;
+    g.nf = ivc.next_data_index;
+    add_data_to_container(gc_ptr, &g, sizeof(group));
+    make_container_compact(gc_ptr, sizeof(group));
+    group_name_ptr = NULL;
+/*
+    for (int i = 0; i < gc_ptr->next_data_index; ++i) {
+        group* group_ptr = (group*) gc_ptr->data_ptr + i;
+        printf("group: |%s|\n", group_ptr->name_ptr);
+        printf("# of faces = %d\n", group_ptr->nf);
+    }
+ */
 
     if (fclose(fp)) {
         perror("fclose");
     }
 
-/*
-    fprintf(stderr, "(nv, nvt, nvn): (%d, %d, %d)\n", vc.next_data_index, vtc.next_data_index, vnc.next_data_index);
-    float x, y, z;
-    x = 0, y = 0, z = 0;
-    for (int i = 0; i < vc.next_data_index; ++i) {
-        float3* float3_ptr = (float3*) vc.data_ptr + i;
-        x += float3_ptr->x;
-        y += float3_ptr->y;
-        z += float3_ptr->z;
-    }
-    float3 Cm = {X / zv, Y / zv, Z / zv};
-    float3 Cbb = {(Xm + XM) / 2, (Ym + YM) / 2, (Zm + ZM) / 2};
-    printf("(%f %f %f)\n", Cbb.x, Cbb.y, Cbb.z);
-    printf("(%f %f %f)\n", x / vc.next_data_index, y / vc.next_data_index, z / vc.next_data_index);
- */
-    float3 Cm, L, Cbb;
-    calculateScaleAndCenter(&vc, &Cm, &L, &Cbb);
-    printf("Cm: (%f, %f, %f)\n", Cm.x, Cm.y, Cm.z);
-    printf("L: (%f, %f, %f)\n", L.x, L.y, L.z);
-    printf("Cbb: (%f, %f, %f)\n", Cbb.x, Cbb.y, Cbb.z);
+    float Cm[3], L[3], Cbb[3];
+    calculateScaleAndCenter(&vc, Cm, L, Cbb);
+#if 0
+    printf("Cm: (%f, %f, %f)\n", Cm[0], Cm[1], Cm[2]);
+    printf("L: (%f, %f, %f)\n", L[0], L[1], L[2]);
+    printf("Cbb: (%f, %f, %f)\n", Cbb[0], Cbb[1], Cbb[2]);
+#endif
     fitToCube(&vc, L, Cbb);
-    calculateScaleAndCenter(&vc, &Cm, &L, &Cbb);
-    printf("Cm: (%f, %f, %f)\n", Cm.x, Cm.y, Cm.z);
-    printf("L: (%f, %f, %f)\n", L.x, L.y, L.z);
-    printf("Cbb: (%f, %f, %f)\n", Cbb.x, Cbb.y, Cbb.z);
+    calculateScaleAndCenter(&vc, Cm, L, Cbb);
+#if 0
+    printf("Cm: (%f, %f, %f)\n", Cm[0], Cm[1], Cm[2]);
+    printf("L: (%f, %f, %f)\n", L[0], L[1], L[2]);
+    printf("Cbb: (%f, %f, %f)\n", Cbb[0], Cbb[1], Cbb[2]);
+#endif
 
-    assert(vc.next_data_index == vtc.next_data_index && vc.next_data_index == vnc.next_data_index);
-    obj_data obj; init_obj_data(&obj);
-    for (int i = 0; i < vc.next_data_index; ++i) {
-        float3* v_ptr = (float3*) vc.data_ptr + i;
-        float2* vt_ptr = (float2*) vtc.data_ptr + i;
-        float3* vn_ptr = (float3*) vnc.data_ptr + i;
-        float8 f8 = {
-            v_ptr->x, v_ptr->y, v_ptr->z,
-            vt_ptr->u, vt_ptr->v,
-            vn_ptr->x, vn_ptr->y, vn_ptr->z,
-        };
-        add_data_to_container(&obj.vertex, &f8, sizeof(float8));
+    assert(vc.next_data_index > 0);
+    if (vtc.next_data_index > 0) {
+        assert(vc.next_data_index == vtc.next_data_index);
     }
-    for (int i = 0; i < ivc.next_data_index; ++i) {
-        int3* iv_ptr = (int3*) ivc.data_ptr + i;
-        int3* ivt_ptr = (int3*) ivtc.data_ptr + i;
-        int3* ivn_ptr = (int3*) ivnc.data_ptr + i;
-        int9 i9 = {
-            iv_ptr->i, iv_ptr->j, iv_ptr->k,
-            ivt_ptr->i, ivt_ptr->j, ivt_ptr->k,
-            ivn_ptr->i, ivn_ptr->j, ivn_ptr->k,
-        };
-        add_data_to_container(&obj.index, &i9, sizeof(int9));
+    if (vnc.next_data_index > 0) {
+        assert(vc.next_data_index == vnc.next_data_index);
+    }
+
+/*
+    printf("all_indices_same? %s\n", all_indices_same ? "True" : "False");
+    printf("all_has_texture? %s\n", all_has_texture ? "True" : "False");
+    printf("all_has_normal? %s\n", all_has_normal ? "True" : "False");
+ */
+    BOOL hasTexture = all_has_texture;
+    BOOL hasNormal = all_has_normal;
+    int STRIDE_FLOATS = 3;
+    if (hasTexture)
+        STRIDE_FLOATS += 2;
+    if (hasNormal)
+        STRIDE_FLOATS += 3;
+    const int TEXTURE_OFFSET_FLOATS = 3;   // always; valid only if hasTexture
+    const int NORMAL_OFFSET_FLOATS = hasTexture ? 5 : 3;
+    float* P_a = (float*) vc.data_ptr;
+    float* UV_a = (float*) vtc.data_ptr;
+    float* N_a = (float*) vnc.data_ptr;
+    int* Pi_a = (int*) ivc.data_ptr;
+    int* UVi_a = (int*) ivtc.data_ptr;
+    int* Ni_a = (int*) ivnc.data_ptr;
+    container vertex; init_container(&vertex);
+    if (all_indices_same) {
+        container* vertex_ptr = &vertex;
+        for (int i = 0; i < vc.next_data_index; ++i) {
+            float* P = P_a + 3 * i;
+            float* UV = UV_a + 2 * i;
+            float* N = N_a + 3 * i;
+            if (hasTexture && hasNormal) {
+                float f8[] = {
+                    *P, *(P + 1), *(P + 2),
+                    *UV, *(UV + 1),
+                    *N, *(N + 1), *(N + 2),
+                };
+                add_data_to_container(vertex_ptr, f8, sizeof(float[8]));
+            } else if (hasTexture && !hasNormal) {
+                float f5[] = {
+                    *P, *(P + 1), *(P + 2),
+                    *UV, *(UV + 1),
+                };
+                add_data_to_container(vertex_ptr, f5, sizeof(float[5]));
+            } else if (!hasTexture && hasNormal) {
+                float f6[] = {
+                    *P, *(P + 1), *(P + 2),
+                    *N, *(N + 1), *(N + 2),
+                };
+                add_data_to_container(vertex_ptr, f6, sizeof(float[6]));
+            } else {
+                float f3[] = {
+                    *P, *(P + 1), *(P + 2),
+                };
+                add_data_to_container(vertex_ptr, f3, sizeof(float[3]));
+            }
+        }
+    } else {
+#if 0
+        container vertex1; init_container(&vertex1);
+#endif
+        container* vertex_ptr = &vertex;
+        for (int i = 0; i < vc.next_data_index; ++i) {
+            float* P = P_a + 3 * i;
+            if (hasTexture && hasNormal) {
+                float f8[] = {
+                    *P, *(P + 1), *(P + 2),
+                    NAN, NAN,
+                    NAN, NAN, NAN,
+                };
+                add_data_to_container(vertex_ptr, f8, sizeof(float[8]));
+            } else if (hasTexture && !hasNormal) {
+                float f5[] = {
+                    *P, *(P + 1), *(P + 2),
+                    NAN, NAN,
+                };
+                add_data_to_container(vertex_ptr, f5, sizeof(float[5]));
+            } else if (!hasTexture && hasNormal) {
+                float f6[] = {
+                    *P, *(P + 1), *(P + 2),
+                    NAN, NAN, NAN,
+                };
+                add_data_to_container(vertex_ptr, f6, sizeof(float[6]));
+            } else {
+                float f3[] = {
+                    *P, *(P + 1), *(P + 2),
+                };
+                add_data_to_container(vertex_ptr, f3, sizeof(float[3]));
+            }
+        }
+
+        float* V_a = (float*) vertex_ptr->data_ptr;
+        for (int i = 0; i < ivc.next_data_index; ++i) {
+            // i-th triangle
+            int* Pi = Pi_a + 3 * i;
+            int* UVi = UVi_a + 3 * i;
+            int* Ni = Ni_a + 3 * i;
+            for (int j = 0; j < 3; ++j, ++Pi, ++UVi, ++Ni) {
+                int Pij = *Pi;
+                float* V = V_a + STRIDE_FLOATS * Pij;
+                if (hasTexture) {
+                    int UVij = *UVi - 1;
+                    float* UV = UV_a + 2 * UVij;
+                    float* UVinV = V + TEXTURE_OFFSET_FLOATS;
+                    if (isNAN(UVinV[0]))
+                        UVinV[0] = UV[0];
+                    else
+                        assert(UVinV[0] == UV[0]);
+                    if (isNAN(UVinV[1]))
+                        UVinV[1] = UV[1];
+                    else
+                        assert(UVinV[1] == UV[1]);
+                }
+                if (hasNormal) {
+                    int Nij = *Ni - 1;
+                    float* N = N_a + 3 * Nij;
+                    float* NinV = V + NORMAL_OFFSET_FLOATS;
+                    if (isNAN(NinV[0]))
+                        NinV[0] = N[0];
+                    else
+                        assert(NinV[0] == N[0]);
+                    if (isNAN(NinV[1]))
+                        NinV[1] = N[1];
+                    else
+                        assert(NinV[1] == N[1]);
+                    if (isNAN(NinV[2]))
+                        NinV[2] = N[2];
+                    else
+                        assert(NinV[2] == N[2]);
+                }
+            }
+        }
+#if 0
+        printf("%d %d\n", vertex.next_data_index, vertex1.next_data_index);
+        float* V0_a = (float*) vertex.data_ptr;
+        float* V1_a = (float*) vertex1.data_ptr;
+        for (int i = 0; i < vertex.next_data_index; ++i) {
+            float* V0 = V0_a + STRIDE_FLOATS * i;
+            float* V1 = V1_a + STRIDE_FLOATS * i;
+            printf("%d\n", memcmp(V0, V1, sizeof(float) * STRIDE_FLOATS));
+        }
+        printf("==== %d\n", memcmp(V0_a, V1_a, sizeof(float) * STRIDE_FLOATS * vertex.next_data_index));
+        free_container(&vertex1);
+#endif
     }
     free_container(&vc);
     free_container(&vtc);
     free_container(&vnc);
-    free_container(&ivc);
+//  free_container(&ivc);   // used in obj_opengl_ptr below
     free_container(&ivtc);
     free_container(&ivnc);
 
-    free_obj_data(&obj);
-
+    obj_opengl_ptr->hasTexture = hasTexture;
+    obj_opengl_ptr->TRIANGLE_VERTICES_DATA_POS_OFFSET_BYTES = 0;    // always
+    obj_opengl_ptr->TRIANGLE_VERTICES_DATA_UV_OFFSET_BYTES = TEXTURE_OFFSET_FLOATS * FLOAT_SIZE_BYTES;  // always but valid only if mHasTexture
+    obj_opengl_ptr->TRIANGLE_VERTICES_DATA_NORMAL_OFFSET_BYTES = NORMAL_OFFSET_FLOATS * FLOAT_SIZE_BYTES;
+    obj_opengl_ptr->TRIANGLE_VERTICES_DATA_STRIDE_BYTES = STRIDE_FLOATS * FLOAT_SIZE_BYTES;
+    obj_opengl_ptr->hasNormal = hasNormal;
+    obj_opengl_ptr->vertex_count = (unsigned) vertex.next_data_index;
+    make_container_compact(&vertex, sizeof(float) * STRIDE_FLOATS);
+    obj_opengl_ptr->vertex_ptr = (float*) vertex.data_ptr;
+    obj_opengl_ptr->triangle_count = (unsigned) ivc.next_data_index;
+    make_container_compact(&ivc, sizeof(int[3]));
+    obj_opengl_ptr->index_ptr = (unsigned*) ivc.data_ptr;
     return;
 }
-void init_obj_data(obj_data* obj_ptr)
-{
-    if (!obj_ptr)
-        return;
-    init_container(&obj_ptr->vertex);
-    init_container(&obj_ptr->index);
-}
-void free_obj_data(obj_data* obj_ptr)
-{
-    if (!obj_ptr)
-        return;
-    free_container(&obj_ptr->vertex);
-    free_container(&obj_ptr->index);
-}
 
-void fitToCube(container* vc_ptr, float3 L, float3 Cbb)
+void fitToCube(container* vc_ptr, float L[3], float Cbb[3])
 {
-    float LM = L.x; // longest length
-    if (LM < L.y)
-        LM = L.y;
-    if (LM < L.z)
-        LM = L.z;
+    float LM = L[0]; // longest length
+    if (LM < L[1])
+        LM = L[1];
+    if (LM < L[2])
+        LM = L[2];
+    float* P_a = (float*) vc_ptr->data_ptr;
     for (int i = 0; i < vc_ptr->next_data_index; ++i) {
-        float3* float3_ptr = (float3*) vc_ptr->data_ptr + i;
-        float3_ptr->x = (float3_ptr->x - Cbb.x) / LM;
-        float3_ptr->y = (float3_ptr->y - Cbb.y) / LM;
-        float3_ptr->z = (float3_ptr->z - Cbb.z) / LM;
+        float* P = P_a + 3 * i;
+        *P = (*P - Cbb[0]) / LM;
+        *(P + 1) = (*(P + 1) - Cbb[1]) / LM;
+        *(P + 2) = (*(P + 2) - Cbb[2]) / LM;
     }
 }
 
-void calculateScaleAndCenter(const container* vc_ptr, float3* Cm_ptr, float3* L_ptr, float3* Cbb_ptr)
+void calculateScaleAndCenter(const container* vc_ptr, float Cm[3], float L[3], float Cbb[3])
 {
     float Xm = INFINITY, XM = -INFINITY;
     float Ym = INFINITY, YM = -INFINITY;
     float Zm = INFINITY, ZM = -INFINITY;
     float X = 0, Y = 0, Z = 0;
+    float* P_a = (float*) vc_ptr->data_ptr;
     for (int i = 0; i < vc_ptr->next_data_index; ++i) {
-        float3* float3_ptr = (float3*) vc_ptr->data_ptr + i;
-        float x = float3_ptr->x, y = float3_ptr->y, z = float3_ptr->z;
+        float* P = P_a + 3 * i;
+        float x = *P, y = *(P + 1), z = *(P + 2);
         if (x < Xm)
             Xm = x;
         else if (x > XM)
@@ -395,15 +555,15 @@ void calculateScaleAndCenter(const container* vc_ptr, float3* Cm_ptr, float3* L_
             ZM = z;
         Z += z;
     }
-    Cm_ptr->x = X / vc_ptr->next_data_index;
-    Cm_ptr->y = Y / vc_ptr->next_data_index;
-    Cm_ptr->z = Z / vc_ptr->next_data_index;
-    L_ptr->x = XM - Xm;
-    L_ptr->y = YM - Ym;
-    L_ptr->z = ZM - Zm;
-    Cbb_ptr->x = (Xm + XM) / 2;
-    Cbb_ptr->y = (Ym + YM) / 2;
-    Cbb_ptr->z = (Zm + ZM) / 2;
+    Cm[0] = X / vc_ptr->next_data_index;
+    Cm[1] = Y / vc_ptr->next_data_index;
+    Cm[2] = Z / vc_ptr->next_data_index;
+    L[0] = XM - Xm;
+    L[1] = YM - Ym;
+    L[2] = ZM - Zm;
+    Cbb[0] = (Xm + XM) / 2;
+    Cbb[1] = (Ym + YM) / 2;
+    Cbb[2] = (Zm + ZM) / 2;
 }
 
 
@@ -433,7 +593,7 @@ int readToken(FILE* fp, char** tokenPtr)
                     char* token = buf + token_start_index;
 
                     if (comment) {
-                        fprintf(stderr, "token after comment: |%s|: ignored\n", token);
+////                    fprintf(stderr, "token after comment: |%s|: ignored\n", token);
                     } else {
                         if (token[0] == '\\') {
                             if (continuous) {
@@ -465,7 +625,7 @@ int readToken(FILE* fp, char** tokenPtr)
                 token_start_index = i + 1;
             }
         }
-        int n = BUFLEN + nread - token_start_index;
+        int n = (int) (BUFLEN + nread - token_start_index);
         memcpy(buf + BUFLEN - n, buf + BUFLEN + nread - n, n);
         token_start_index = BUFLEN - n;
         last_i = BUFLEN;

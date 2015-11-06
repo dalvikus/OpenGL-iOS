@@ -86,6 +86,7 @@ BOOL parseIndices(char* s, unsigned ia[])
             ++p;
         }
     }
+    assert(ia[0] == ia[1] && ia[0] == ia[2]);
     return true;
 }
 
@@ -395,6 +396,7 @@ void print_container_int3(container c)
 
 int main(int argc, char *argv[])
 {
+#if 0
 #define N 10000000
     container c;
     c.next_data_index = 0;
@@ -500,6 +502,7 @@ int main(int argc, char *argv[])
     printf("%p\n", a);
     printf("%zu", sizeof(void*));
     return 0;
+#endif
     NSString *s1 = @"abc";
     NSString *s2 = @"123";
 

@@ -27,7 +27,7 @@
 		A48D79091BE74C1C00317D8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A48D79071BE74C1C00317D8B /* InfoPlist.strings */; };
 		A48D790B1BE74C1C00317D8B /* openglTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A48D790A1BE74C1C00317D8B /* openglTests.m */; };
 		A48D79351BE74DB400317D8B /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A48D79341BE74DB400317D8B /* Chips3.obj */; };
-		A48D793C1BE89B2300317D8B /* obj.c in Sources */ = {isa = PBXBuildFile; fileRef = A48D793B1BE89B2300317D8B /* obj.c */; };
+		A4DC91DE1BED5115001AF21C /* obj.c in Sources */ = {isa = PBXBuildFile; fileRef = A4DC91DD1BED5115001AF21C /* obj.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,7 +67,7 @@
 		A48D790A1BE74C1C00317D8B /* openglTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = openglTests.m; sourceTree = "<group>"; };
 		A48D79341BE74DB400317D8B /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../../Chips3.obj; sourceTree = "<group>"; };
 		A48D79381BE750E100317D8B /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj.h; sourceTree = "<group>"; };
-		A48D793B1BE89B2300317D8B /* obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = obj.c; sourceTree = "<group>"; };
+		A4DC91DD1BED5115001AF21C /* obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = obj.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +131,7 @@
 		A48D78DE1BE74C1C00317D8B /* opengl */ = {
 			isa = PBXGroup;
 			children = (
-				A48D793B1BE89B2300317D8B /* obj.c */,
+				A4DC91DD1BED5115001AF21C /* obj.c */,
 				A48D79381BE750E100317D8B /* obj.h */,
 				A48D79341BE74DB400317D8B /* Chips3.obj */,
 				A48D78E71BE74C1C00317D8B /* DNAppDelegate.h */,
@@ -280,7 +280,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A48D78E91BE74C1C00317D8B /* DNAppDelegate.m in Sources */,
-				A48D793C1BE89B2300317D8B /* obj.c in Sources */,
+				A4DC91DE1BED5115001AF21C /* obj.c in Sources */,
 				A48D78F61BE74C1C00317D8B /* DNViewController.m in Sources */,
 				A48D78E51BE74C1C00317D8B /* main.m in Sources */,
 			);
@@ -505,6 +505,7 @@
 				A48D79101BE74C1C00317D8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A48D79111BE74C1C00317D8B /* Build configuration list for PBXNativeTarget "openglTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +514,7 @@
 				A48D79131BE74C1C00317D8B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
