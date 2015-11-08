@@ -27,6 +27,10 @@
 		2D500B940D5A79C200DBA0E3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500B920D5A79C200DBA0E3 /* OpenGLES.framework */; };
 		2D500B9A0D5A79CF00DBA0E3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500B990D5A79CF00DBA0E3 /* QuartzCore.framework */; };
 		2D500C820D5A7DAE00DBA0E3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */; };
+		A47937941BEFDD6500391820 /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A47937931BEFDD6500391820 /* Chips3.obj */; };
+		A47937971BEFDDB300391820 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937951BEFDDB300391820 /* Shader.fsh */; };
+		A47937981BEFDDB300391820 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937961BEFDDB300391820 /* Shader.vsh */; };
+		A479379B1BEFDDC100391820 /* obj.m in Sources */ = {isa = PBXBuildFile; fileRef = A479379A1BEFDDC100391820 /* obj.m */; };
 		AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7492A91728A9E50013253B /* MainWindow.xib */; };
 		AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7E203F1728A2C600728423 /* PaintingViewController.xib */; };
 		AF7E20451728A54000728423 /* PaintingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7E20441728A53F00728423 /* PaintingViewController.m */; };
@@ -73,6 +77,11 @@
 		2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* GLPaint-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GLPaint-Info.plist"; sourceTree = "<group>"; };
+		A47937931BEFDD6500391820 /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../Chips3.obj; sourceTree = "<group>"; };
+		A47937951BEFDDB300391820 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = ../../opengl/opengl/Shaders/Shader.fsh; sourceTree = "<group>"; };
+		A47937961BEFDDB300391820 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = ../../opengl/opengl/Shaders/Shader.vsh; sourceTree = "<group>"; };
+		A47937991BEFDDC100391820 /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = obj.h; path = ../opengl/opengl/obj.h; sourceTree = "<group>"; };
+		A479379A1BEFDDC100391820 /* obj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = obj.m; path = ../opengl/opengl/obj.m; sourceTree = "<group>"; };
 		AF7492AA1728A9E50013253B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		AF7E20401728A2C600728423 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PaintingViewController.xib; sourceTree = "<group>"; };
 		AF7E20431728A53F00728423 /* PaintingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaintingViewController.h; path = Classes/PaintingViewController.h; sourceTree = "<group>"; };
@@ -138,6 +147,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A47937991BEFDDC100391820 /* obj.h */,
+				A479379A1BEFDDC100391820 /* obj.m */,
 				AF877F8717272804002D08B8 /* debug.h */,
 				AF877F8817272804002D08B8 /* fileUtil.h */,
 				AF877F8917272804002D08B8 /* fileUtil.m */,
@@ -152,6 +163,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A47937931BEFDD6500391820 /* Chips3.obj */,
 				AF7492A91728A9E50013253B /* MainWindow.xib */,
 				AF7E203F1728A2C600728423 /* PaintingViewController.xib */,
 				AFCEBA1D11D96215001AA22A /* Icon-Small@2x.png */,
@@ -209,6 +221,8 @@
 		AF877F8E17272B68002D08B8 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				A47937951BEFDDB300391820 /* Shader.fsh */,
+				A47937961BEFDDB300391820 /* Shader.vsh */,
 				AF877F9017272B68002D08B8 /* point.vsh */,
 				AF877F8F17272B68002D08B8 /* point.fsh */,
 			);
@@ -264,6 +278,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A47937971BEFDDB300391820 /* Shader.fsh in Resources */,
 				28F25BC20D64BF0B00158CCD /* Recording.data in Resources */,
 				28F25BC30D64BF0B00158CCD /* Select.caf in Resources */,
 				28F25BC40D64BF0B00158CCD /* Erase.caf in Resources */,
@@ -272,6 +287,7 @@
 				1BBE306E0DD273B90012773B /* Purple.png in Resources */,
 				1BBE306F0DD273B90012773B /* Red.png in Resources */,
 				1BBE30700DD273B90012773B /* Yellow.png in Resources */,
+				A47937981BEFDDB300391820 /* Shader.vsh in Resources */,
 				1BD0B6AB0DDCA9B800E538F8 /* Default.png in Resources */,
 				1B612B1F0DDCF277003A5CC7 /* Particle.png in Resources */,
 				AFCEBA2111D96215001AA22A /* Icon-72.png in Resources */,
@@ -286,6 +302,7 @@
 				AF877F9217272B68002D08B8 /* point.vsh in Resources */,
 				AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */,
 				AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */,
+				A47937941BEFDD6500391820 /* Chips3.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +316,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1B8CA3120DC8E3A4002C657A /* AppController.m in Sources */,
 				1B8CA3130DC8E3A4002C657A /* PaintingView.m in Sources */,
+				A479379B1BEFDDC100391820 /* obj.m in Sources */,
 				1B8CA3140DC8E3A4002C657A /* SoundEffect.m in Sources */,
 				AF877F8C17272804002D08B8 /* fileUtil.m in Sources */,
 				AF877F8D17272804002D08B8 /* shaderUtil.c in Sources */,
