@@ -1,6 +1,6 @@
 #ifndef _OBJ
 #define _OBJ
-#if 1   // obj.c
+#if 0   // obj.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

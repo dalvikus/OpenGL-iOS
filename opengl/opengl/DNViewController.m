@@ -10,7 +10,7 @@
         SQUARE      DRAW_ARRAYS (DRAW_ELEMENTS)
         CUBE
  */
-#define POLYGON
+//#define POLYGON
 ////#define SQUARE
 
 #ifdef POLYGON
@@ -47,7 +47,9 @@ enum
     NUM_ATTRIBUTES
 };
 
-GLfloat diffuseColor[] = {0.4f, 0.4f, 1.0f, 1.0f};
+//GLfloat diffuseColor[] = {0.4f, 0.4f, 1.0f, 1.0f};
+//GLfloat diffuseColor[] = {1.4f, 0.4f, 0.4f, 1.0f};
+GLfloat diffuseColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
 #ifdef SQUARE
 #ifdef DRAW_ARRAYS
 GLfloat gSqureVertexData[1 * 6 * 6] =       // 1: side, 6: vertex, 6: float
@@ -555,6 +557,22 @@ GLfloat gCubeVertexData[216] =
     }
 
     return YES;
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    UITouch* touch = [touches anyObject];
+NSLog(@"%@", touch);
+/*
+    CGPoint location = [touch locationInView:self.view];    
+    CGPoint lastLoc = [touch previousLocationInView:self.view];
+    CGPoint diff = CGPointMake(lastLoc.x - location.x, lastLoc.y - location.y);
+    float rotX = -1 * GLKMathDegreesToRadians(diff.y / 2.0);
+    float rotY = -1 * GLKMathDegreesToRadians(diff.x / 2.0);
+    GLKVector3 xAxis = GLKVector3Make(1, 0, 0);
+    _rotMatrix = GLKMatrix4Rotate(_rotMatrix, rotX, xAxis.x, xAxis.y, xAxis.z);
+    GLKVector3 yAxis = GLKVector3Make(0, 1, 0);
+    _rotMatrix = GLKMatrix4Rotate(_rotMatrix, rotY, yAxis.x, yAxis.y, yAxis.z);
+ */
 }
 
 @end

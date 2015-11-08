@@ -23,7 +23,7 @@ BOOL parseIndices(char* s, unsigned ia[])
 {
     char* p = s;
     if (!s)
-        return false;
+        return NO;
 
     ia[1] = 0;
     ia[2] = 0;
@@ -31,7 +31,7 @@ BOOL parseIndices(char* s, unsigned ia[])
     for (int i = 0; i < 3; ++i) {
         if (!*p) {
             fprintf(stderr, "|%s|: |%s|: got null\n", s, p);
-            return false;
+            return NO;
         }
         errno = 0;
         char* endPtr;
@@ -39,22 +39,22 @@ BOOL parseIndices(char* s, unsigned ia[])
 //      printf("%p\n%p (|%d %c|)\n", s, endPtr, *endPtr, *endPtr);
         if (errno) {
             fprintf(stderr, "|%s|: |%s|: %s\n", s, p, strerror(errno));
-            return false;
+            return NO;
         }
         if (l <= 0) {
             fprintf(stderr, "|%s|: |%s|: got non-positive: %ld\n", s, p, l);
-            return false;
+            return NO;
         }
         if (l > (unsigned long) ((unsigned) -1)) {
             fprintf(stderr, "|%s|: |%s|: not fitted to unsigned(%u)\n", s, p, (unsigned) -1);
-            return false;
+            return NO;
         }
         ia[i] = (unsigned) l;
         if (!*endPtr)
             break;
         if (*endPtr != '/') {
             fprintf(stderr, "|%s|: |%s|: invalid character(|%c|)\n", s, p, *endPtr);
-            return false;
+            return NO;
         }
         p = endPtr + 1;
         if (*p == '/') {
@@ -62,7 +62,7 @@ BOOL parseIndices(char* s, unsigned ia[])
             ++p;
         }
     }
-    return true;
+    return YES;
 }
 
 
@@ -95,24 +95,24 @@ BOOL add_data_to_container(container* container_ptr, void* data_ptr, size_t data
     const char NAME[] = "add_data_to_container";
     if (!container_ptr) {
         fprintf(stderr, "%s: container_ptr is null\n", NAME);
-        return false;
+        return NO;
     }
     if (!data_ptr) {
         fprintf(stderr, "%s: data_ptr is null\n", NAME);
-        return false;
+        return NO;
     }
     if (!container_ptr->data_ptr || container_ptr->next_data_index == container_ptr->len) {
         void* q = realloc(container_ptr->data_ptr, (container_ptr->len + CONTAINER_CAPACITY) * data_size);
         if (!q) {
             fprintf(stderr, "%s: realloc failed\n", NAME);
-            return false;
+            return NO;
         }
         container_ptr->len += CONTAINER_CAPACITY;
         container_ptr->data_ptr = q;
     }
     memcpy(container_ptr->data_ptr + container_ptr->next_data_index * data_size, data_ptr, data_size);
     ++container_ptr->next_data_index;
-    return true;
+    return YES;
 }
 
 void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
@@ -136,9 +136,9 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
     int k = 0;
     char* token = NULL;
     char* group_name_ptr = NULL;
-    BOOL all_indices_same = true;   // all indices like "l/m/n" are the same if they are positive
-    BOOL all_has_texture = true;
-    BOOL all_has_normal = true;
+    BOOL all_indices_same = YES;    // all indices like "l/m/n" are the same if they are positive
+    BOOL all_has_texture = YES;
+    BOOL all_has_normal = YES;
     while (1) {
         if (token == NULL)
             k = readToken(fp, &token);
@@ -235,39 +235,39 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
                 unsigned ia1[3];
                 b = parseIndices(token, ia1); assert(b);
                 if (ia1[1] == 0)
-                    all_has_texture = false;
+                    all_has_texture = NO;
                 else if (ia1[1] != ia1[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
                 if (ia1[2] == 0)
-                    all_has_normal = false;
+                    all_has_normal = NO;
                 else if (ia1[2] != ia1[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
 ////printf(" %s", token);
 //printf("f1: %s\n", token);
                 k = readToken(fp, &token); assert(k > 0);
                 unsigned ia2[3];
                 b = parseIndices(token, ia2); assert(b);
                 if (ia2[1] == 0)
-                    all_has_texture = false;
+                    all_has_texture = NO;
                 else if (ia2[1] != ia2[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
                 if (ia2[2] == 0)
-                    all_has_normal = false;
+                    all_has_normal = NO;
                 else if (ia2[2] != ia2[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
 ////printf(" %s", token);
 //printf("f2: %s\n", token);
                 k = readToken(fp, &token); assert(k > 0);
                 unsigned ia3[3];
                 b = parseIndices(token, ia3); assert(b);
                 if (ia3[1] == 0)
-                    all_has_texture = false;
+                    all_has_texture = NO;
                 else if (ia3[1] != ia3[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
                 if (ia3[2] == 0)
-                    all_has_normal = false;
+                    all_has_normal = NO;
                 else if (ia3[2] != ia3[0])
-                    all_indices_same = false;
+                    all_indices_same = NO;
 ////printf(" %s", token);
 //printf("f3: %s\n", token);
 
@@ -579,8 +579,8 @@ int readToken(FILE* fp, char** tokenPtr)
     static char buf[BUFLEN + BUFLEN];   // second half used for actual read;
                                         // first half contains part of token which is right-adjusted in order that next read can use it with token_start_index
     static size_t nread = 0;
-    static BOOL comment = false;
-    static BOOL continuous = false;
+    static BOOL comment = NO;
+    static BOOL continuous = NO;
     static int token_start_index = BUFLEN;
     static int last_i = BUFLEN;
 
@@ -603,9 +603,9 @@ int readToken(FILE* fp, char** tokenPtr)
                             if (len > 1) {
                                 fprintf(stderr, "WARN: \\ not alone: |%s|: treated as \\\n", token);
                             }
-                            continuous = true;
+                            continuous = YES;
                         } else if (token[0] == '#') {
-                            comment = true;
+                            comment = YES;
                         } else {
                             *tokenPtr = token;
                             if (continuous) {
@@ -618,8 +618,8 @@ int readToken(FILE* fp, char** tokenPtr)
                         }
                     }
                     if (c == '\r' || c == '\n') {   // reset at new line
-                        comment = false;
-                        continuous = false;
+                        comment = NO;
+                        continuous = NO;
                     }
                 }
                 token_start_index = i + 1;
