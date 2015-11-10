@@ -52,6 +52,7 @@
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
 
+#define opengl
 //CLASS INTERFACES:
 
 @interface PaintingView : UIView
@@ -59,7 +60,9 @@
 @property(nonatomic, readwrite) CGPoint location;
 @property(nonatomic, readwrite) CGPoint previousLocation;
 
+#ifndef opengl
 - (void)erase;
+#endif
 - (void)setBrushColorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
 
 @end

@@ -14,7 +14,6 @@
 #define kBrushScale			2
 
 
-#define opengl
 #ifdef opengl
 #define POLYGON
 ////#define SQUARE
@@ -332,11 +331,13 @@ printf("layoutSubviews\n");
         [self resizeFromLayer:(CAEAGLLayer*)self.layer];
     }
 
+#ifndef opengl
 	// Clear the framebuffer the first time it is allocated
 	if (needsErase) {
 		[self erase];
 		needsErase = NO;
 	}
+#endif
 }
 
 - (void)setupShaders
@@ -619,6 +620,7 @@ printf("dealloc\n");
         [EAGLContext setCurrentContext:nil];
 }
 
+#ifndef opengl
 // Erases the screen
 - (void)erase
 {
@@ -634,9 +636,14 @@ printf("erase\n");
 	glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
 	[context presentRenderbuffer:GL_RENDERBUFFER];
 }
+#endif
 
 // Drawings a line onscreen based on where the user touches
+#ifdef opengl
+- (void)renderLineFromPoint
+#else
 - (void)renderLineFromPoint:(CGPoint)start toPoint:(CGPoint)end
+#endif
 {
 printf("renderLineFromPoint\n");
 #if 0
@@ -779,7 +786,11 @@ printf("playback\n");
         [data getBytes:&y range:NSMakeRange(8*(i+1)+sizeof(Float32), sizeof(Float32))];
         point2 = CGPointMake(x[0], y[0]);
 
+#ifdef opengl
+        [self renderLineFromPoint];
+#else
         [self renderLineFromPoint:point1 toPoint:point2];
+#endif
     }
 
 	// Render the next path after a short delay
@@ -821,7 +832,11 @@ printf("touchesMoved\n");
 	}
 
 	// Render the stroke
+#ifdef opengl
+	[self renderLineFromPoint];
+#else
 	[self renderLineFromPoint:previousLocation toPoint:location];
+#endif
 }
 
 // Handles the end of a touch event when the touch is a tap.
@@ -834,7 +849,11 @@ printf("touchesEnded\n");
 		firstTouch = NO;
 		previousLocation = [touch previousLocationInView:self];
 		previousLocation.y = bounds.size.height - previousLocation.y;
+#ifdef opengl
+		[self renderLineFromPoint];
+#else
 		[self renderLineFromPoint:previousLocation toPoint:location];
+#endif
 	}
 }
 
@@ -870,10 +889,19 @@ diffuseColor[3] = 1.0f;
 #endif
 
 printf("initialized? %s\n", initialized ? "True" : "False");
+#ifdef opengl
+    if (!initialized) {
+        initialized = [self initGL];
+    }
+    if (initialized) {
+        [self renderLineFromPoint];
+    }
+#else
     if (initialized) {
         glUseProgram(program[PROGRAM_POINT].id);
         glUniform4fv(program[PROGRAM_POINT].uniform[UNIFORM_VERTEX_COLOR], 1, brushColor);
     }
+#endif
 }
 
 
@@ -886,7 +914,7 @@ printf("initialized? %s\n", initialized ? "True" : "False");
 {
 #if 1
     CGRect rect = [[UIScreen mainScreen] bounds];
-printf("%f, %f\n", rect.size.width, rect.size.height);
+//  printf("%f, %f\n", rect.size.width, rect.size.height);
     float aspect = fabsf(rect.size.width / rect.size.height);
 #else
     float aspect = fabsf(self.view.bounds.size.width / self.view.bounds.size.height);
