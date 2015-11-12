@@ -145,7 +145,7 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
         if (token) {
 //          printf("%s\n", token);
             char c = token[0];
-            if (c == 'g') {
+            if (strcmp(token, "g") == 0) {
                 k = readToken(fp, &token);
                 assert(k > 0);
                 if (group_name_ptr) {
@@ -162,73 +162,66 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
 //              printf("g: |%s|\n", token);
                 token = NULL;
                 continue;
-            } else if (c == 'v') {
-                char c2 = token[1];
-                if (c2 == '\0') {   // "v"
+            } else if (strcmp(token, "v") == 0) {
 ////printf("v");
-                    float vx, vy, vz;
-                    k = readToken(fp, &token); assert(k > 0);
-                    vx = parseFloat(token); assert(vx != NAN);
+                float vx, vy, vz;
+                k = readToken(fp, &token); assert(k > 0);
+                vx = parseFloat(token); assert(vx != NAN);
 ////printf(" %s", token);
 //printf("vx: %f\n", vx);
-                    k = readToken(fp, &token); assert(k > 0);
-                    vy = parseFloat(token); assert(vy != NAN);
+                k = readToken(fp, &token); assert(k > 0);
+                vy = parseFloat(token); assert(vy != NAN);
 ////printf(" %s", token);
 //printf("vy: %f\n", vy);
-                    k = readToken(fp, &token); assert(k > 0);
-                    vz = parseFloat(token); assert(vz != NAN);
+                k = readToken(fp, &token); assert(k > 0);
+                vz = parseFloat(token); assert(vz != NAN);
 ////printf(" %s", token);
 //printf("vz: %f\n", vz);
 ////printf("\n");
 
-                    float P[3] = {vx, vy, vz};
-                    add_data_to_container(&vc, P, sizeof(float[3]));
+                float P[3] = {vx, vy, vz};
+                add_data_to_container(&vc, P, sizeof(float[3]));
 
-                    token = NULL;
-                } else if (c2 == 't') { // "vt"
-                    assert(token[2] == '\0');
+                token = NULL;
+            } else if (strcmp(token, "vt") == 0) {
 ////printf("vt");
-                    float vtu, vtv;
-                    k = readToken(fp, &token); assert(k > 0);
-                    vtu = parseFloat(token); assert(vtu != NAN && vtu >= 0.0f && vtu <= 1.0f);
+                float vtu, vtv;
+                k = readToken(fp, &token); assert(k > 0);
+                vtu = parseFloat(token); assert(vtu != NAN && vtu >= 0.0f && vtu <= 1.0f);
 ////printf(" %s", token);
 //printf("vtu: %f\n", vtu);
-                    k = readToken(fp, &token); assert(k > 0);
-                    vtv = parseFloat(token); assert(vtv != NAN && vtv >= 0.0f && vtv <= 1.0f);
+                k = readToken(fp, &token); assert(k > 0);
+                vtv = parseFloat(token); assert(vtv != NAN && vtv >= 0.0f && vtv <= 1.0f);
 ////printf(" %s", token);
 //printf("vtv: %f\n", vtv);
 ////printf("\n");
 
-                    float uv[2] = {vtu, vtv};
-                    add_data_to_container(&vtc, uv, sizeof(float[2]));
+                float uv[2] = {vtu, vtv};
+                add_data_to_container(&vtc, uv, sizeof(float[2]));
 
-                    token = NULL;
-                } else if (c2 == 'n') { // "vn"
-                    assert(token[2] == '\0');
+                token = NULL;
+            } else if (strcmp(token, "vn") == 0) {
 ////printf("vn");
-                    float vnx, vny, vnz;
-                    k = readToken(fp, &token); assert(k > 0);
-                    vnx = parseFloat(token); assert(vnx != NAN);
+                float vnx, vny, vnz;
+                k = readToken(fp, &token); assert(k > 0);
+                vnx = parseFloat(token); assert(vnx != NAN);
 ////printf(" %s", token);
 //printf("vnx: %f\n", vnx);
-                    k = readToken(fp, &token); assert(k > 0);
-                    vny = parseFloat(token); assert(vny != NAN);
+                k = readToken(fp, &token); assert(k > 0);
+                vny = parseFloat(token); assert(vny != NAN);
 ////printf(" %s", token);
 //printf("vny: %f\n", vny);
-                    k = readToken(fp, &token); assert(k > 0);
-                    vnz = parseFloat(token); assert(vnz != NAN);
+                k = readToken(fp, &token); assert(k > 0);
+                vnz = parseFloat(token); assert(vnz != NAN);
 ////printf(" %s", token);
 //printf("vnz: %f\n", vnz);
 ////printf("\n");
 
-                    float N[3] = {vnx, vny, vnz};
-                    add_data_to_container(&vnc, N, sizeof(float[3]));
+                float N[3] = {vnx, vny, vnz};
+                add_data_to_container(&vnc, N, sizeof(float[3]));
 
-                    token = NULL;
-                } else {
-                    assert(0);
-                }
-            } else if (c == 'f') {
+                token = NULL;
+            } else if (strcmp(token, "f") == 0) {
 ////printf("f");
                 BOOL b;
                 k = readToken(fp, &token); assert(k > 0);
@@ -298,6 +291,21 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
                     }
 ////printf("\n");
                 }
+            } else if (strcmp(token, "mtllib") == 0) {
+                k = readToken(fp, &token);
+                assert(k > 0);
+                printf("mtllib: |%s|\n", token);
+                token = NULL;
+            } else if (strcmp(token, "usemtl") == 0) {
+                k = readToken(fp, &token);
+                assert(k > 0);
+                printf("mtllib: |%s|\n", token);
+                token = NULL;
+            } else if (strcmp(token, "s") == 0) {
+                k = readToken(fp, &token);
+                assert(k > 0);
+                printf("s: |%s|\n", token);
+                token = NULL;
             } else {
                 fprintf(stderr, "unhandled token: |%s|\n", token);
                 assert(0);
@@ -343,18 +351,20 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
 #endif
 
     assert(vc.next_data_index > 0);
+/*
     if (vtc.next_data_index > 0) {
         assert(vc.next_data_index == vtc.next_data_index);
     }
     if (vnc.next_data_index > 0) {
         assert(vc.next_data_index == vnc.next_data_index);
     }
+ */
 
-/*
+#if 0
     printf("all_indices_same? %s\n", all_indices_same ? "True" : "False");
     printf("all_has_texture? %s\n", all_has_texture ? "True" : "False");
     printf("all_has_normal? %s\n", all_has_normal ? "True" : "False");
- */
+#endif
     BOOL hasTexture = all_has_texture;
     BOOL hasNormal = all_has_normal;
     int STRIDE_FLOATS = 3;
@@ -450,19 +460,39 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
                     int UVij = *UVi - 1;
                     float* UV = UV_a + 2 * UVij;
                     float* UVinV = V + TEXTURE_OFFSET_FLOATS;
+                    UVinV[0] = UV[0];   // given physical vertex has several (U, V) like pole in a sphere
+#if 0
                     if (isNAN(UVinV[0]))
                         UVinV[0] = UV[0];
-                    else
-                        assert(UVinV[0] == UV[0]);
+                    else {
+//                      assert(UVinV[0] == UV[0]);
+                        if (UV[0] != UVinV[0]) {
+                            printf("U: (i = %d, j = %d): overwrite %f with %f\n", i, j, UVinV[0], UV[0]);
+                            UVinV[0] = UV[0];
+                        }
+                    }
+#endif
+                    UVinV[1] = UV[1];   // given physical vertex has several (U, V) like pole in a sphere
+#if 0
                     if (isNAN(UVinV[1]))
                         UVinV[1] = UV[1];
-                    else
-                        assert(UVinV[1] == UV[1]);
+                    else {
+//                      assert(UVinV[1] == UV[1]);
+                        if (UV[1] != UVinV[1]) {
+                            printf("V: (i = %d, j = %d): overwrite %f with %f\n", i, j, UVinV[1], UV[1]);
+                            UVinV[1] = UV[1];
+                        }
+                    }
+#endif
                 }
                 if (hasNormal) {
                     int Nij = *Ni - 1;
                     float* N = N_a + 3 * Nij;
                     float* NinV = V + NORMAL_OFFSET_FLOATS;
+                    NinV[0] = N[0];
+                    NinV[1] = N[1];
+                    NinV[2] = N[2];
+#if 0
                     if (isNAN(NinV[0]))
                         NinV[0] = N[0];
                     else
@@ -475,6 +505,7 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
                         NinV[2] = N[2];
                     else
                         assert(NinV[2] == N[2]);
+#endif
                 }
             }
         }
