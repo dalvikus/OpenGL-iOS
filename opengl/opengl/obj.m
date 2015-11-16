@@ -144,7 +144,6 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
             k = readToken(fp, &token);
         if (token) {
 //          printf("%s\n", token);
-            char c = token[0];
             if (strcmp(token, "g") == 0) {
                 k = readToken(fp, &token);
                 assert(k > 0);

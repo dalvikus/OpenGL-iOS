@@ -10,8 +10,10 @@
         SQUARE      DRAW_ARRAYS (DRAW_ELEMENTS)
         CUBE
  */
-//#define POLYGON
-////#define SQUARE
+#define POLYGON
+#ifndef POLYGON
+#define SQUARE
+#endif
 
 #ifdef POLYGON
 ////#define ALL_IN_ONE
@@ -50,6 +52,7 @@ enum
 //GLfloat diffuseColor[] = {0.4f, 0.4f, 1.0f, 1.0f};
 //GLfloat diffuseColor[] = {1.4f, 0.4f, 0.4f, 1.0f};
 GLfloat diffuseColor[] = {1.0f, 0.0f, 0.0f, 1.0f};
+GLfloat diffuseColor2[] = {0.0f, 1.0f, 0.0f, 1.0f};
 #ifdef SQUARE
 #ifdef DRAW_ARRAYS
 GLfloat gSqureVertexData[1 * 6 * 6] =       // 1: side, 6: vertex, 6: float
@@ -64,7 +67,7 @@ GLfloat gSqureVertexData[1 * 6 * 6] =       // 1: side, 6: vertex, 6: float
 #else
 GLfloat gSqureVertexData4index[1 * 4 * 6] = // 1: side, 4: vertex, 6: float
 {
-     0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,    // A: top right
+     1.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,    // A: top right
     -0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,    // B: top left
     -0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,    // C: bottom left
      0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,    // D: bottom right
@@ -180,6 +183,52 @@ GLfloat gCubeVertexData[216] =
 };
 #endif  // CUBE
 #endif  // !SQUARE (POLYGON || CUBE)
+GLfloat gCubeVertexData[216] =
+{
+    // Data layout for each line below is:
+    // positionX, positionY, positionZ,     normalX, normalY, normalZ,
+     0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,     1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,     1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,     1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,     1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,
+
+     0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,
+
+    -0.5f,  0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,
+
+    -0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,
+
+     0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+    -0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,
+
+     0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,
+};
 
 @interface DNViewController () {
     GLuint _program;
@@ -187,9 +236,14 @@ GLfloat gCubeVertexData[216] =
     GLKMatrix4 _modelViewProjectionMatrix;
     GLKMatrix3 _normalMatrix;
     float _rotation;
+    GLKMatrix4 _modelViewProjectionMatrix2;
+    GLKMatrix3 _normalMatrix2;
+    float _rotation2;
 
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+    GLuint _vertexArray2;
+    GLuint _vertexBuffer2;
 }
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) GLKBaseEffect *effect;
@@ -291,6 +345,15 @@ GLfloat gCubeVertexData[216] =
     glEnableVertexAttribArray(GLKVertexAttribNormal);
     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
 #endif
+    glGenVertexArraysOES(1, &_vertexArray2);
+    glBindVertexArrayOES(_vertexArray2);
+    glGenBuffers(1, &_vertexBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
 
     glBindVertexArrayOES(0);
 }
@@ -333,12 +396,17 @@ GLfloat gCubeVertexData[216] =
     modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 1.5f);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
     modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    GLKMatrix4 modelViewMatrix2 = GLKMatrix4MakeTranslation(0.0f, 0.0f, -1.5f);
+    modelViewMatrix2 = GLKMatrix4Rotate(modelViewMatrix2, _rotation2, 1.0f, 1.0f, 1.0f);
+    modelViewMatrix2 = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix2);
 
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
-
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    _normalMatrix2 = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix2), NULL);
+    _modelViewProjectionMatrix2 = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix2);
 
     _rotation += self.timeSinceLastUpdate * 0.5f;
+    _rotation2 += 2 * self.timeSinceLastUpdate * 0.5f;
 }
 
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -348,6 +416,53 @@ GLfloat gCubeVertexData[216] =
 
     glBindVertexArrayOES(_vertexArray);
 
+#if 1
+//  glGenBuffers(1, &_vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+#if 0
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gSqureVertexData4index), gSqureVertexData4index, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+#endif
+    glUseProgram(_program);
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix.m);
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, diffuseColor);
+//  glDrawElements(GL_TRIANGLES, 2 * 3, GL_UNSIGNED_INT, gSqureDrawOrder);
+    int face_offset = 0;
+    container* gc_ptr = &polygon.gc;
+    int n_color_interval = (I27 - (1 + 1)) / gc_ptr->next_data_index;    // skip black, white
+    for (int i = 0; i < gc_ptr->next_data_index; ++i) {
+        group* group_ptr = (group*) gc_ptr->data_ptr + i;
+        glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, COLOR_A[1 + i * n_color_interval]);    // skip black
+        glDrawElements(GL_TRIANGLES,
+            (group_ptr->nf - face_offset) * N_VERETX_PER_TRIANGLE,
+            GL_UNSIGNED_INT,
+            polygon.index_ptr + face_offset * N_VERETX_PER_TRIANGLE
+        );
+        face_offset = group_ptr->nf;
+    }
+
+//  glBindVertexArrayOES(_vertexArray2);
+//  glGenBuffers(1, &_vertexBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer2);
+#if 0
+    glBufferData(GL_ARRAY_BUFFER, sizeof(gCubeVertexData), gCubeVertexData, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(0));
+    glEnableVertexAttribArray(GLKVertexAttribNormal);
+    glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
+#endif
+    glUseProgram(_program);
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix2.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix2.m);
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, diffuseColor2);
+    glBindVertexArrayOES(_vertexArray2);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+#else
     // Render the object with GLKit
 /*
     [self.effect prepareToDraw];
@@ -389,6 +504,14 @@ GLfloat gCubeVertexData[216] =
 #else
     glDrawArrays(GL_TRIANGLES, 0, 36);
 #endif
+#endif
+    glUseProgram(_program);
+
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix2.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix2.m);
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, diffuseColor2);
+    glBindVertexArrayOES(_vertexArray2);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
 #endif
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A43916631BF9B3FF0060271E /* obj.m in Sources */ = {isa = PBXBuildFile; fileRef = A43916621BF9B3FF0060271E /* obj.m */; };
 		A48D78D51BE74C1C00317D8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A48D78D41BE74C1C00317D8B /* Foundation.framework */; };
 		A48D78D71BE74C1C00317D8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A48D78D61BE74C1C00317D8B /* CoreGraphics.framework */; };
 		A48D78D91BE74C1C00317D8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A48D78D81BE74C1C00317D8B /* UIKit.framework */; };
@@ -27,7 +28,6 @@
 		A48D79091BE74C1C00317D8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A48D79071BE74C1C00317D8B /* InfoPlist.strings */; };
 		A48D790B1BE74C1C00317D8B /* openglTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A48D790A1BE74C1C00317D8B /* openglTests.m */; };
 		A48D79351BE74DB400317D8B /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A48D79341BE74DB400317D8B /* Chips3.obj */; };
-		A4DC91DE1BED5115001AF21C /* obj.c in Sources */ = {isa = PBXBuildFile; fileRef = A4DC91DD1BED5115001AF21C /* obj.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A43916621BF9B3FF0060271E /* obj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = obj.m; sourceTree = "<group>"; };
 		A48D78D11BE74C1C00317D8B /* opengl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = opengl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A48D78D41BE74C1C00317D8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A48D78D61BE74C1C00317D8B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -67,7 +68,6 @@
 		A48D790A1BE74C1C00317D8B /* openglTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = openglTests.m; sourceTree = "<group>"; };
 		A48D79341BE74DB400317D8B /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../../Chips3.obj; sourceTree = "<group>"; };
 		A48D79381BE750E100317D8B /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = obj.h; sourceTree = "<group>"; };
-		A4DC91DD1BED5115001AF21C /* obj.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = obj.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +131,7 @@
 		A48D78DE1BE74C1C00317D8B /* opengl */ = {
 			isa = PBXGroup;
 			children = (
-				A4DC91DD1BED5115001AF21C /* obj.c */,
+				A43916621BF9B3FF0060271E /* obj.m */,
 				A48D79381BE750E100317D8B /* obj.h */,
 				A48D79341BE74DB400317D8B /* Chips3.obj */,
 				A48D78E71BE74C1C00317D8B /* DNAppDelegate.h */,
@@ -280,9 +280,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A48D78E91BE74C1C00317D8B /* DNAppDelegate.m in Sources */,
-				A4DC91DE1BED5115001AF21C /* obj.c in Sources */,
 				A48D78F61BE74C1C00317D8B /* DNViewController.m in Sources */,
 				A48D78E51BE74C1C00317D8B /* main.m in Sources */,
+				A43916631BF9B3FF0060271E /* obj.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
