@@ -27,7 +27,8 @@
 		2D500B940D5A79C200DBA0E3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500B920D5A79C200DBA0E3 /* OpenGLES.framework */; };
 		2D500B9A0D5A79CF00DBA0E3 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500B990D5A79CF00DBA0E3 /* QuartzCore.framework */; };
 		2D500C820D5A7DAE00DBA0E3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */; };
-		A47937941BEFDD6500391820 /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A47937931BEFDD6500391820 /* Chips3.obj */; };
+		A4223A181BF55AF200CC13A5 /* Chips3.obj in Resources */ = {isa = PBXBuildFile; fileRef = A4223A171BF55AF200CC13A5 /* Chips3.obj */; };
+		A43916651BFA63430060271E /* Sphere.obj in Resources */ = {isa = PBXBuildFile; fileRef = A43916641BFA63430060271E /* Sphere.obj */; };
 		A47937971BEFDDB300391820 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937951BEFDDB300391820 /* Shader.fsh */; };
 		A47937981BEFDDB300391820 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937961BEFDDB300391820 /* Shader.vsh */; };
 		A479379B1BEFDDC100391820 /* obj.m in Sources */ = {isa = PBXBuildFile; fileRef = A479379A1BEFDDC100391820 /* obj.m */; };
@@ -77,7 +78,8 @@
 		2D500C810D5A7DAE00DBA0E3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		32CA4F630368D1EE00C91783 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* GLPaint-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GLPaint-Info.plist"; sourceTree = "<group>"; };
-		A47937931BEFDD6500391820 /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../Chips3.obj; sourceTree = "<group>"; };
+		A4223A171BF55AF200CC13A5 /* Chips3.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Chips3.obj; path = ../../../../Downloads/Chips3.obj; sourceTree = "<group>"; };
+		A43916641BFA63430060271E /* Sphere.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Sphere.obj; path = ../../../../Downloads/Sphere.obj; sourceTree = "<group>"; };
 		A47937951BEFDDB300391820 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = ../../opengl/opengl/Shaders/Shader.fsh; sourceTree = "<group>"; };
 		A47937961BEFDDB300391820 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = ../../opengl/opengl/Shaders/Shader.vsh; sourceTree = "<group>"; };
 		A47937991BEFDDC100391820 /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = obj.h; path = ../opengl/opengl/obj.h; sourceTree = "<group>"; };
@@ -163,7 +165,8 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A47937931BEFDD6500391820 /* Chips3.obj */,
+				A43916641BFA63430060271E /* Sphere.obj */,
+				A4223A171BF55AF200CC13A5 /* Chips3.obj */,
 				AF7492A91728A9E50013253B /* MainWindow.xib */,
 				AF7E203F1728A2C600728423 /* PaintingViewController.xib */,
 				AFCEBA1D11D96215001AA22A /* Icon-Small@2x.png */,
@@ -281,10 +284,12 @@
 				A47937971BEFDDB300391820 /* Shader.fsh in Resources */,
 				28F25BC20D64BF0B00158CCD /* Recording.data in Resources */,
 				28F25BC30D64BF0B00158CCD /* Select.caf in Resources */,
+				A4223A181BF55AF200CC13A5 /* Chips3.obj in Resources */,
 				28F25BC40D64BF0B00158CCD /* Erase.caf in Resources */,
 				1BBE306C0DD273B90012773B /* Blue.png in Resources */,
 				1BBE306D0DD273B90012773B /* Green.png in Resources */,
 				1BBE306E0DD273B90012773B /* Purple.png in Resources */,
+				A43916651BFA63430060271E /* Sphere.obj in Resources */,
 				1BBE306F0DD273B90012773B /* Red.png in Resources */,
 				1BBE30700DD273B90012773B /* Yellow.png in Resources */,
 				A47937981BEFDDB300391820 /* Shader.vsh in Resources */,
@@ -302,7 +307,6 @@
 				AF877F9217272B68002D08B8 /* point.vsh in Resources */,
 				AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */,
 				AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */,
-				A47937941BEFDD6500391820 /* Chips3.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

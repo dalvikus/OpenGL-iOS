@@ -164,9 +164,9 @@
 {
 	if(CFAbsoluteTimeGetCurrent() > lastTime + kMinEraseInterval) {
 		[erasingSound play];
-#ifndef opengl
+////#ifndef opengl
 		[(PaintingView *)self.view erase];
-#endif
+////#endif
 		lastTime = CFAbsoluteTimeGetCurrent();
 	}
 }

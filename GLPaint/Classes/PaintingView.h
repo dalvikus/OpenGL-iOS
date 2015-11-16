@@ -60,9 +60,9 @@
 @property(nonatomic, readwrite) CGPoint location;
 @property(nonatomic, readwrite) CGPoint previousLocation;
 
-#ifndef opengl
+////#ifndef opengl
 - (void)erase;
-#endif
+////#endif
 - (void)setBrushColorWithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue;
 
 @end
