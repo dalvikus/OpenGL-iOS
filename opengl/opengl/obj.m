@@ -115,10 +115,10 @@ BOOL add_data_to_container(container* container_ptr, void* data_ptr, size_t data
     return YES;
 }
 
-void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
+void* parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
 {
     if (!obj_opengl_ptr)
-        return;
+        return NULL;
     container* gc_ptr = &obj_opengl_ptr->gc; init_container(gc_ptr);
     container vc; init_container(&vc);
     container vtc; init_container(&vtc);
@@ -130,7 +130,7 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
     FILE *fp = fopen(objPathname, "r");
     if (fp == NULL) {
         perror("fopen");
-        return;
+        return NULL;
     }
 
     int k = 0;
@@ -540,7 +540,7 @@ void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr)
     obj_opengl_ptr->triangle_count = (unsigned) ivc.next_data_index;
     make_container_compact(&ivc, sizeof(int[3]));
     obj_opengl_ptr->index_ptr = (unsigned*) ivc.data_ptr;
-    return;
+    return obj_opengl_ptr;
 }
 
 void fitToCube(container* vc_ptr, float L[3], float Cbb[3])

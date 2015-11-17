@@ -44,7 +44,7 @@ typedef struct
     unsigned* index_ptr;        // SHOULD be freed
     container gc;               // gc.data_ptr: SHOULD be freed
 } obj_opengl;
-void parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr);
+void* parseObj(const char* objPathname, obj_opengl* obj_opengl_ptr);
 
 int readToken(FILE* fp, char** tokenPtr);
 BOOL parseIndices(char* s, unsigned ia[]);
