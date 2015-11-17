@@ -2,6 +2,8 @@
 #import <OpenGLES/EAGLDrawable.h>
 #import <GLKit/GLKit.h>
 
+#import "Model.h"
+
 #import "PaintingView.h"
 #import "shaderUtil.h"
 #import "fileUtil.h"
@@ -113,6 +115,7 @@ GLfloat COLOR_A[][4] = {
     {2 * F3, 2 * F3, 2 * F3, ALPHA},
 };
 obj_opengl polygon;
+obj_opengl sphere;
 #else   // by DRAW_ARRAYS
 /*
 ...
@@ -262,6 +265,14 @@ typedef struct {
 
     GLuint _vertexArray;
     GLuint _vertexBuffer;
+
+    GLuint _vertexArray2;
+    GLuint _vertexBuffer2;
+    GLKMatrix4 _modelViewProjectionMatrix2;
+    GLKMatrix3 _normalMatrix2;
+
+    Model* Sphere;
+    Model* Chips;
 #endif
 }
 
@@ -496,6 +507,18 @@ printf("initGL\n");
     glEnableVertexAttribArray(GLKVertexAttribNormal);
     glVertexAttribPointer(GLKVertexAttribNormal, 3, GL_FLOAT, GL_FALSE, 24, BUFFER_OFFSET(12));
 #endif
+    glGenVertexArraysOES(1, &_vertexArray2);
+    glBindVertexArrayOES(_vertexArray2);
+    glGenBuffers(1, &_vertexBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, sphere.vertex_count * sphere.TRIANGLE_VERTICES_DATA_STRIDE_BYTES, sphere.vertex_ptr, GL_STATIC_DRAW);
+    free(sphere.vertex_ptr);
+    glEnableVertexAttribArray(GLKVertexAttribPosition);
+    glVertexAttribPointer(GLKVertexAttribPosition, COORDS_PER_POSITION, GL_FLOAT, GL_FALSE, sphere.TRIANGLE_VERTICES_DATA_STRIDE_BYTES, BUFFER_OFFSET(sphere.TRIANGLE_VERTICES_DATA_POS_OFFSET_BYTES));
+    if (sphere.hasNormal) {
+        glEnableVertexAttribArray(GLKVertexAttribNormal);
+        glVertexAttribPointer(GLKVertexAttribNormal, COORDS_PER_NORMAL, GL_FLOAT, GL_FALSE, sphere.TRIANGLE_VERTICES_DATA_STRIDE_BYTES, BUFFER_OFFSET(sphere.TRIANGLE_VERTICES_DATA_NORMAL_OFFSET_BYTES));
+    }
 
     glBindVertexArrayOES(0);
 #endif
@@ -658,6 +681,14 @@ printf("renderLineFromPoint\n");
 #else
 #ifdef opengl
     [self update];
+#if 1
+    glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
+//  glClearColor(0.0, 0.0, 0.0, 0.0);
+//  glClearColor(diffuseColor[0], diffuseColor[1], diffuseColor[2], diffuseColor[3]);
+//  glClearColor(1.0, 1.0, 1.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+#endif
+#if 0
 {
 #if 0
     glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
@@ -715,8 +746,49 @@ if (gc_ptr->next_data_index > 0) {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 #endif
 #endif
-    glBindVertexArrayOES(0);
 }
+#endif
+
+#if 0
+{
+    glBindVertexArrayOES(_vertexArray2);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    // Render the object again with ES2
+    glUseProgram(_program);
+
+    glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, _modelViewProjectionMatrix2.m);
+    glUniformMatrix3fv(uniforms[UNIFORM_NORMAL_MATRIX], 1, 0, _normalMatrix2.m);
+    glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, diffuseColor);
+    int face_offset = 0;
+    container* gc_ptr = &sphere.gc;
+    if (gc_ptr->next_data_index > 0) {
+        int n_color_interval = (I27 - (1 + 1)) / gc_ptr->next_data_index;    // skip black, white
+        for (int i = 0; i < gc_ptr->next_data_index; ++i) {
+            group* group_ptr = (group*) gc_ptr->data_ptr + i;
+            glUniform4fv(uniforms[UNIFORM_DIFFUSE_COLOR], 1, COLOR_A[1 + i * n_color_interval]);    // skip black
+            glDrawElements(GL_TRIANGLES,
+                (group_ptr->nf - face_offset) * N_VERETX_PER_TRIANGLE,
+                GL_UNSIGNED_INT,
+                sphere.index_ptr + face_offset * N_VERETX_PER_TRIANGLE
+            );
+            face_offset = group_ptr->nf;
+        }
+    }
+}
+#endif
+    [Chips
+        renderWith:^() {
+            glDisable(GL_BLEND);
+        }
+    ];
+    [Sphere
+        renderWith:^() {
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        }
+    ];
+    glBindVertexArrayOES(0);
 #endif
 ////#else
     static GLfloat*     vertexBuffer = NULL;
@@ -741,7 +813,6 @@ if (gc_ptr->next_data_index > 0) {
 
     // Add points to the buffer so there are drawing points every X pixels
     count = MAX(ceilf(sqrtf((end.x - start.x) * (end.x - start.x) + (end.y - start.y) * (end.y - start.y)) / kBrushPixelStep), 1);
-printf("count = %d\n", count);
     for(i = 0; i < count; ++i) {
         if(vertexCount == vertexMax) {
             vertexMax = 2 * vertexMax;
@@ -978,11 +1049,17 @@ printf("initialized? %s\n", initialized ? "True" : "False");
     modelViewMatrix = GLKMatrix4MakeTranslation(0.0f, 0.0f, 0.0f);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
     modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
-
     _normalMatrix = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
-
     _modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+    [Chips setMVPMatrix:_modelViewProjectionMatrix normalMatrix:_normalMatrix];
 
+    modelViewMatrix = GLKMatrix4MakeScale(1.0f, 2.0f, 3.0f);
+//  modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, _rotation, 1.0f, 1.0f, 1.0f);
+    modelViewMatrix = GLKMatrix4Multiply(baseModelViewMatrix, modelViewMatrix);
+    _normalMatrix2 = GLKMatrix3InvertAndTranspose(GLKMatrix4GetMatrix3(modelViewMatrix), NULL);
+    _modelViewProjectionMatrix2 = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix);
+
+    [Sphere setMVPMatrix:_modelViewProjectionMatrix2 normalMatrix:_normalMatrix2];
 #if 1
     _rotation += 1.0f * (3.1415926535897932384f / 180);
 #else
@@ -996,21 +1073,6 @@ printf("initialized? %s\n", initialized ? "True" : "False");
 
     // Create shader program.
     _program = glCreateProgram();
-
-#ifdef POLYGON
-//  NSString *objPathname = [[NSBundle mainBundle] pathForResource:@"Chips3" ofType:@"obj"];
-    NSString *objPathname = [[NSBundle mainBundle] pathForResource:@"Sphere" ofType:@"obj"];
-    NSLog(@"%@", objPathname);
-    parseObj([objPathname UTF8String], &polygon);
-#endif
-/*
-    container* gc_ptr = &polygon.gc;
-    for (int i = 0; i < gc_ptr->next_data_index; ++i) {
-        group* group_ptr = (group*) gc_ptr->data_ptr + i;
-        printf("group: |%s|\n", group_ptr->name_ptr);
-        printf("# of faces = %d\n", group_ptr->nf);
-    }
- */
 
     // Create and compile vertex shader.
     vertShaderPathname = [[NSBundle mainBundle] pathForResource:@"Shader" ofType:@"vsh"];
@@ -1061,6 +1123,23 @@ printf("initialized? %s\n", initialized ? "True" : "False");
     uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(_program, "modelViewProjectionMatrix");
     uniforms[UNIFORM_NORMAL_MATRIX] = glGetUniformLocation(_program, "normalMatrix");
     uniforms[UNIFORM_DIFFUSE_COLOR] = glGetUniformLocation(_program, "diffuseColor");
+#ifdef POLYGON
+    NSString *objPathname = [[NSBundle mainBundle] pathForResource:@"Chips3" ofType:@"obj"];
+    parseObj([objPathname UTF8String], &polygon);
+    Chips = [[Model alloc] initWith:objPathname use:_program modelViewProjectionMatrixIndex:uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] normalMatrixIndex:uniforms[UNIFORM_NORMAL_MATRIX] colorIndex:uniforms[UNIFORM_DIFFUSE_COLOR]];
+    objPathname = [[NSBundle mainBundle] pathForResource:@"Sphere" ofType:@"obj"];
+    parseObj([objPathname UTF8String], &sphere);
+    Sphere = [[Model alloc] initWith:objPathname use:_program modelViewProjectionMatrixIndex:uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] normalMatrixIndex:uniforms[UNIFORM_NORMAL_MATRIX] colorIndex:uniforms[UNIFORM_DIFFUSE_COLOR]];
+#endif
+/*
+    container* gc_ptr = &polygon.gc;
+    for (int i = 0; i < gc_ptr->next_data_index; ++i) {
+        group* group_ptr = (group*) gc_ptr->data_ptr + i;
+        printf("group: |%s|\n", group_ptr->name_ptr);
+        printf("# of faces = %d\n", group_ptr->nf);
+    }
+ */
+
 
     // Release vertex and fragment shaders.
     if (vertShader) {

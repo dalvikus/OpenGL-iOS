@@ -32,6 +32,7 @@
 		A47937971BEFDDB300391820 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937951BEFDDB300391820 /* Shader.fsh */; };
 		A47937981BEFDDB300391820 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = A47937961BEFDDB300391820 /* Shader.vsh */; };
 		A479379B1BEFDDC100391820 /* obj.m in Sources */ = {isa = PBXBuildFile; fileRef = A479379A1BEFDDC100391820 /* obj.m */; };
+		A47F5FE71BFA7B4200A99E26 /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = A47F5FE61BFA7B4200A99E26 /* Model.m */; };
 		AF7492AB1728A9E50013253B /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7492A91728A9E50013253B /* MainWindow.xib */; };
 		AF7E20421728A2C600728423 /* PaintingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AF7E203F1728A2C600728423 /* PaintingViewController.xib */; };
 		AF7E20451728A54000728423 /* PaintingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AF7E20441728A53F00728423 /* PaintingViewController.m */; };
@@ -84,6 +85,8 @@
 		A47937961BEFDDB300391820 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = ../../opengl/opengl/Shaders/Shader.vsh; sourceTree = "<group>"; };
 		A47937991BEFDDC100391820 /* obj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = obj.h; path = ../opengl/opengl/obj.h; sourceTree = "<group>"; };
 		A479379A1BEFDDC100391820 /* obj.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = obj.m; path = ../opengl/opengl/obj.m; sourceTree = "<group>"; };
+		A47F5FE51BFA7B4200A99E26 /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Model.h; path = Classes/Model.h; sourceTree = "<group>"; };
+		A47F5FE61BFA7B4200A99E26 /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Model.m; path = Classes/Model.m; sourceTree = "<group>"; };
 		AF7492AA1728A9E50013253B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		AF7E20401728A2C600728423 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PaintingViewController.xib; sourceTree = "<group>"; };
 		AF7E20431728A53F00728423 /* PaintingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PaintingViewController.h; path = Classes/PaintingViewController.h; sourceTree = "<group>"; };
@@ -149,6 +152,8 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A47F5FE51BFA7B4200A99E26 /* Model.h */,
+				A47F5FE61BFA7B4200A99E26 /* Model.m */,
 				A47937991BEFDDC100391820 /* obj.h */,
 				A479379A1BEFDDC100391820 /* obj.m */,
 				AF877F8717272804002D08B8 /* debug.h */,
@@ -320,6 +325,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1B8CA3120DC8E3A4002C657A /* AppController.m in Sources */,
 				1B8CA3130DC8E3A4002C657A /* PaintingView.m in Sources */,
+				A47F5FE71BFA7B4200A99E26 /* Model.m in Sources */,
 				A479379B1BEFDDC100391820 /* obj.m in Sources */,
 				1B8CA3140DC8E3A4002C657A /* SoundEffect.m in Sources */,
 				AF877F8C17272804002D08B8 /* fileUtil.m in Sources */,
